@@ -2,14 +2,22 @@
 using System.Collections;
 
 public class basicEnemy : MonoBehaviour {
-    
+
+    private scoreKeeper scoreKeeper;
     public float hitPoints = 150f;   
     public AudioClip explosion;
     public AudioClip notDestroyed;
     public GameObject enemyProjectile;
     public float projectileSpeed = 10;
     public float shotsPerSecond; // set in inspector
+    public int scoreValue = 150;
     
+
+    void Start()
+    {
+        scoreKeeper = GameObject.Find("Score").GetComponent<scoreKeeper>();
+    }
+
     void OnTriggerEnter2D(Collider2D col){      
         playerProjectile laser = col.gameObject.GetComponent<playerProjectile>();
         if(laser){
@@ -18,6 +26,7 @@ public class basicEnemy : MonoBehaviour {
             if (hitPoints <= 0){
                 AudioSource.PlayClipAtPoint(explosion, transform.position);
                 Destroy(this.gameObject);
+                scoreKeeper.Score(scoreValue);
             } else {
                 AudioSource.PlayClipAtPoint(notDestroyed, transform.position); // simple hit sound when enemy is not destroyed
             }

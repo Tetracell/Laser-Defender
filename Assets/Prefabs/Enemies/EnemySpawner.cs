@@ -11,6 +11,7 @@ public class EnemySpawner : MonoBehaviour {
     private float xmax;
     private float xmin;
     public AudioClip youWin;
+    public float spawnDelay;
     
 	// Use this for initialization
 	void Start () {
@@ -20,7 +21,8 @@ public class EnemySpawner : MonoBehaviour {
        Vector3 rightEdge = Camera.main.ViewportToWorldPoint(new Vector3(1,0, distanceToCamera));
        xmax = rightEdge.x;
        xmin = leftEdge.x;
-       enemySpawn();       
+        // enemySpawn();       
+       spawnUntilFull();
 	}
 	
     public void OnDrawGizmos(){
@@ -44,8 +46,8 @@ public class EnemySpawner : MonoBehaviour {
         }
         if (AllMembersDead()){
             Debug.Log("Empty Formation");
-            enemySpawn();
-            AudioSource.PlayClipAtPoint(youWin, this.transform.position); // The 'You win' noise.
+            spawnUntilFull();
+            AudioSource.PlayClipAtPoint(youWin, transform.position); // The 'You win' noise.
         }
 	}
 
@@ -68,5 +70,32 @@ public class EnemySpawner : MonoBehaviour {
             GameObject enemy = Instantiate(enemyPrefab, child.transform.position, Quaternion.identity) as GameObject;
             enemy.transform.parent = child;
         }
+    }
+
+    void spawnUntilFull()
+    {
+        Transform freePosition = nextFreePosition();
+        if (freePosition)
+        {
+            GameObject enemy = Instantiate(enemyPrefab, freePosition.position, Quaternion.identity) as GameObject;
+            enemy.transform.parent = freePosition;
+        }
+        if (nextFreePosition())
+        {
+            Invoke("spawnUntilFull", spawnDelay);
+        }
+               
+    }
+
+    Transform nextFreePosition()
+    {
+        foreach(Transform childPositionGameObject in transform)
+        {
+            if (childPositionGameObject.childCount == 0)
+            {
+                return childPositionGameObject;
+            }  
+        }
+        return null;
     }
 }
