@@ -29,10 +29,10 @@ public class PlayerController : MonoBehaviour {
         playerMovement();
         positionClamp(); 
         if(Input.GetKeyDown(KeyCode.Space)){
-            InvokeRepeating("playerFire",0.000001f, fireRate);
+            repeatingFire();
         }  
         if(Input.GetKeyUp(KeyCode.Space)){
-            CancelInvoke("playerFire");
+            repeatingFireCancel();
         }            
 	}
     
@@ -51,6 +51,16 @@ public class PlayerController : MonoBehaviour {
     void positionClamp(){
         float newX = Mathf.Clamp(transform.position.x, xmin, xmax);
         transform.position = new Vector3(newX, transform.position.y, transform.position.z); 
+    }
+
+    private void repeatingFire()
+    {
+        InvokeRepeating("playerFire", 0.000001f, fireRate);
+    }
+
+    private void repeatingFireCancel()
+    {
+        CancelInvoke("playerFire");
     }
     
     void playerFire(){

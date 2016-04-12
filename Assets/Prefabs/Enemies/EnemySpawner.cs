@@ -2,19 +2,22 @@
 using System.Collections;
 
 public class EnemySpawner : MonoBehaviour {
-    public GameObject enemyPrefab;
-    public float width = 10f;
-    public float height = 5f;
+    
+    
     private bool movingRight = true;
     //private bool movingLeft = false;
     public float speed = 5f;
     private float xmax;
     private float xmin;
+
     public AudioClip youWin;
     public float spawnDelay;
-    
-	// Use this for initialization
-	void Start () {
+    public GameObject enemyPrefab;
+    public float width = 10f;
+    public float height = 5f;
+
+    // Use this for initialization
+    void Start () {
 	   //The dreaded for loop
        float distanceToCamera = transform.position.z - Camera.main.transform.position.z;
        Vector3 leftEdge = Camera.main.ViewportToWorldPoint(new Vector3(0,0, distanceToCamera));
